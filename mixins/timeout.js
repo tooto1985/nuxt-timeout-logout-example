@@ -1,6 +1,7 @@
 export default {
   data() {
     return {
+      renewSid: null,
       checkSid: null,
       timeout: 10,
       enterTime: null,
@@ -16,20 +17,20 @@ export default {
       }
     },
     _renew() {
-      this.enterTime = Date.now();  
+      clearTimeout(this.renewSid);
+      this.renewSid = setTimeout(() => {
+        // console.log('renew');
+        this.enterTime = Date.now();
+      }, 100);
     }
   },
   mounted() {
     if (this.timeoutEnabled) {
       if (!this.checkSid) {
-        console.log('mixin mounted');
-
+        // console.log('mixin mounted');
         this.eventList.forEach(event => {
           window.addEventListener(event, this._renew);
         });
-
-
-
         this.enterTime = Date.now();
         this.checkSid = setInterval(this._check, 1000);
         this._check();
@@ -39,12 +40,10 @@ export default {
   beforeDestroy() {
     if (this.timeoutEnabled) {
       if (this.checkSid) {
-        console.log('mixin beforeDestory');
-
+        // console.log('mixin beforeDestory');
         this.eventList.forEach(event => {
           window.removeEventListener(event, this._renew);
         });
-
         clearInterval(this.checkSid);
         this.checkSid = null;
       }

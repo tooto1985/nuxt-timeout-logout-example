@@ -4,6 +4,7 @@
     <div>
       {{ seconds }}
     </div>
+    <input type="button" value="Homepage" @click="$router.push('/')" />
   </div>
 </template>
 
@@ -13,8 +14,8 @@ export default {
   mixins: [timeout],
   data() {
     return {
-      timeoutEnabled: false
-    }
-  }
+      timeoutEnabled: false,
+    };
+  },
 };
 </script>
