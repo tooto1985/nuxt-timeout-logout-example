@@ -4,14 +4,13 @@ export default {
       renewSid: null,
       checkSid: null,
       timeout: 10,
-      enterTime: null,
       seconds: null,
       eventList: ['mousemove', 'touchstart', 'scroll', 'resize', 'keydown', 'click'],
     }
   },
   methods: {
     _check() {
-      this.seconds = this.timeout - parseInt((Date.now() - this.enterTime) / 1000);
+      this.seconds = this.timeout - parseInt((Date.now() - this.$cookies.get('enterTime')) / 1000);
       if (this.seconds <= 0) {
         this.$router.push('/');
       }
@@ -20,7 +19,9 @@ export default {
       clearTimeout(this.renewSid);
       this.renewSid = setTimeout(() => {
         // console.log('renew');
-        this.enterTime = Date.now();
+        this.$cookies.set('enterTime', Date.now(), {
+          path: '/'
+        });
       }, 100);
     }
   },
@@ -31,7 +32,9 @@ export default {
         this.eventList.forEach(event => {
           window.addEventListener(event, this._renew);
         });
-        this.enterTime = Date.now();
+        this.$cookies.set('enterTime', Date.now(), {
+          path: '/'
+        });
         this.checkSid = setInterval(this._check, 1000);
         this._check();
       }
